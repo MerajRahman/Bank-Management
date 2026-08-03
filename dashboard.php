@@ -60,6 +60,7 @@ if ($result->num_rows > 0) {
     <div class="sidebar">
         <h2>Bank Ashkona</h2>
         <ul class="nav-links">
+            <li><a href="home.php">🏠 Home</a></li>
             <li class="active">Dashboard</li>
             <li>Transfer Funds</li>
             <li>Transaction History</li>

@@ -187,6 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="sidebar">
         <h2>Admin Console</h2>
         <ul class="nav-links">
+            <li><a href="home.php">🏠 Home</a></li>
             <li class="<?= $view == 'overview' ? 'active' : '' ?>"><a href="?view=overview">Overview</a></li>
             <li class="<?= $view == 'manage' ? 'active' : '' ?>"><a href="?view=manage">Manage Accounts</a></li>
             <li class="<?= $view == 'logs' ? 'active' : '' ?>"><a href="?view=logs">System Logs</a></li>
