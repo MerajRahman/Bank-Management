@@ -1,11 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Jun 30, 2026 at 03:15 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,7 +32,7 @@ CREATE TABLE `accounts` (
 --
 
 INSERT INTO `accounts` (`Account_ID`, `User_ID`, `Current_Balance`, `Account_Type`, `Status`) VALUES
-('AC-10001', 1, 9999999999999.99, 'Savings', 'Active'),
+('AC-10001', 1, 50000.00, 'Savings', 'Active'),
 ('SYS-00000', 1, 1000004999.00, 'Checking', 'Active');
 
 -- --------------------------------------------------------
@@ -80,6 +72,8 @@ CREATE TABLE `users` (
   `User_ID` int(11) NOT NULL,
   `Name` varchar(100) NOT NULL,
   `Email` varchar(100) NOT NULL,
+  `Phone` varchar(20) DEFAULT NULL,
+  `Address` varchar(255) DEFAULT NULL,
   `Password_Hash` varchar(255) NOT NULL,
   `Role` enum('Customer','Admin') DEFAULT 'Customer',
   `Created_At` timestamp NOT NULL DEFAULT current_timestamp()
@@ -89,9 +83,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`User_ID`, `Name`, `Email`, `Password_Hash`, `Role`, `Created_At`) VALUES
-(1, 'kkk', 'kkk111@gmail.com', '$2y$10$PSknbVmBodkrwjeUkUO8newSPX1W4HMWXwEm/2RRdqB7WD/Mkjvh6', 'Customer', '2026-06-25 09:20:48'),
-(2, 'Master Admin', 'admin@bankashkona.com', '$2y$10$wCjrQf9NncN/zyusXKZUK.5b5b9W50cjc9hrBnin6qvc.h/p5d6d.', 'Admin', '2026-06-25 09:42:29');
+INSERT INTO `users` (`User_ID`, `Name`, `Email`, `Phone`, `Address`, `Password_Hash`, `Role`, `Created_At`) VALUES
+(1, 'kkk', 'kkk111@gmail.com', '01712345678', 'House 12, Ashkona', '$2y$10$PSknbVmBodkrwjeUkUO8newSPX1W4HMWXwEm/2RRdqB7WD/Mkjvh6', 'Customer', '2026-06-25 09:20:48'),
+(2, 'Master Admin', 'admin@bankashkona.com', NULL, NULL, '$2y$10$wCjrQf9NncN/zyusXKZUK.5b5b9W50cjc9hrBnin6qvc.h/p5d6d.', 'Admin', '2026-06-25 09:42:29');
 
 --
 -- Indexes for dumped tables
