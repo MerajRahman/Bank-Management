@@ -72,6 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (count($errors) > 0) {
                 $message = err(implode("<br>", $errors));
             } else {
+<<<<<<< HEAD
+=======
+                // Verify receiver exists and is active
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
                 $chk = $conn->prepare("SELECT Account_ID FROM Accounts WHERE Account_ID = ? AND Status = 'Active'");
                 $chk->bind_param("s", $receiver);
                 $chk->execute();
@@ -79,23 +83,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if ($chk->num_rows == 0) {
                     $message = err("Receiver account not found or is inactive. Please check the account number.");
                 } else {
+<<<<<<< HEAD
                     $deduct = $conn->prepare("UPDATE Accounts SET Current_Balance = Current_Balance - ? WHERE Account_ID = ? AND Current_Balance >= ? AND Status = 'Active'");
                     $deduct->bind_param("dsd", $amount, $account_num, $amount);
 
                     $credit = $conn->prepare("UPDATE Accounts SET Current_Balance = Current_Balance + ? WHERE Account_ID = ?");
                     $credit->bind_param("ds", $amount, $receiver);
 
+=======
+                    // Atomic debit (only succeeds with enough balance on an active account)
+                    $deduct = $conn->prepare("UPDATE Accounts SET Current_Balance = Current_Balance - ? WHERE Account_ID = ? AND Current_Balance >= ? AND Status = 'Active'");
+                    $deduct->bind_param("dsd", $amount, $account_num, $amount);
+
+                    // Credit the receiver
+                    $credit = $conn->prepare("UPDATE Accounts SET Current_Balance = Current_Balance + ? WHERE Account_ID = ?");
+                    $credit->bind_param("ds", $amount, $receiver);
+
+                    // Log the transaction
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
                     $log = $conn->prepare("INSERT INTO Transactions (Sender_Account, Receiver_Account, Amount, Transaction_Type, Status) VALUES (?, ?, ?, 'Transfer', 'Completed')");
                     $log->bind_param("ssd", $account_num, $receiver, $amount);
 
                     $conn->begin_transaction();
                     try {
                         $deduct->execute();
+<<<<<<< HEAD
                         if ($deduct->affected_rows != 1) throw new Exception("Insufficient balance or your account is inactive.");
                         $credit->execute();
                         if ($credit->errno) throw new Exception("Failed to credit the receiver account.");
                         $log->execute();
                         if ($log->errno) throw new Exception("Failed to record the transaction.");
+=======
+                        if ($deduct->affected_rows != 1) {
+                            throw new Exception("Insufficient balance or your account is inactive.");
+                        }
+                        $credit->execute();
+                        if ($credit->errno) {
+                            throw new Exception("Failed to credit the receiver account.");
+                        }
+                        $log->execute();
+                        if ($log->errno) {
+                            throw new Exception("Failed to record the transaction.");
+                        }
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
                         $conn->commit();
                         $balance -= $amount;
                         $message = ok("৳" . number_format($amount, 2) . " transferred to <strong>$receiver</strong> successfully.");
@@ -118,8 +148,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $errors = [];
         if (strlen($name) < 3) $errors[] = "Full Name must be at least 3 characters long.";
+<<<<<<< HEAD
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Invalid email format.";
         if (!preg_match("/^[0-9]{11}$/", $phone)) $errors[] = "Contact number must be exactly 11 digits.";
+=======
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Invalid email format. Please include an '@' and a valid domain.";
+        if (!preg_match("/^[0-9]{11}$/", $phone)) $errors[] = "Contact number must be exactly 11 digits (e.g., 01712345678).";
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
         if (empty($address)) $errors[] = "Address cannot be empty.";
 
         if (count($errors) > 0) {
@@ -163,8 +198,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
         if (!password_verify($current, $hash)) $errors[] = "Current password is incorrect.";
         if (strlen($new) < 8) $errors[] = "New password must be at least 8 characters long.";
+<<<<<<< HEAD
         if (!preg_match('/[A-Z]/', $new)) $errors[] = "Must contain at least one uppercase letter.";
         if (!preg_match('/[^a-zA-Z0-9]/', $new)) $errors[] = "Must contain at least one special character.";
+=======
+        if (!preg_match('/[A-Z]/', $new)) $errors[] = "New password must contain at least one uppercase letter.";
+        if (!preg_match('/[^a-zA-Z0-9]/', $new)) $errors[] = "New password must contain at least one special character (e.g., @, #, $, %).";
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
         if ($new !== $confirm) $errors[] = "New passwords do not match.";
 
         if (count($errors) > 0) {
@@ -174,6 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $upd = $conn->prepare("UPDATE Users SET Password_Hash = ? WHERE User_ID = ?");
             $upd->bind_param("si", $new_hash, $user_id);
             $upd->execute();
+<<<<<<< HEAD
             $message = $upd->errno == 0 ? ok("Password changed successfully.") : err("Database error.");
         }
     }
@@ -205,16 +246,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $message = err("Invalid card type selected.");
             }
+=======
+            $message = $upd->errno == 0 ? ok("Password changed successfully.") : err("Database error while changing your password.");
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
         }
     }
 }
 
+<<<<<<< HEAD
 // Recent transactions for overview
+=======
+// Recent transactions for the overview (only when an account exists)
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
 $recent = [];
 if ($account) {
     $esc = $conn->real_escape_string($account_num);
     $r = $conn->query("SELECT * FROM Transactions WHERE Sender_Account = '$esc' OR Receiver_Account = '$esc' ORDER BY Timestamp DESC LIMIT 8");
     while ($row = $r->fetch_assoc()) { $recent[] = $row; }
+<<<<<<< HEAD
 }
 
 // Get User's Cards
@@ -222,6 +271,8 @@ $my_cards = [];
 if ($account) {
     $r = $conn->query("SELECT * FROM Cards WHERE User_ID = $user_id ORDER BY Applied_On DESC");
     while ($row = $r->fetch_assoc()) { $my_cards[] = $row; }
+=======
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
 }
 ?>
 
@@ -263,8 +314,13 @@ if ($account) {
 
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #555; }
+<<<<<<< HEAD
         .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; transition: border 0.3s; }
         .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--secondary); }
+=======
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; transition: border 0.3s; }
+        .form-group input:focus { outline: none; border-color: var(--secondary); }
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
 
         .btn { padding: 12px 24px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-primary { background: var(--primary); color: white; }
@@ -306,7 +362,10 @@ if ($account) {
         <ul class="nav-links">
             <li><a href="home.php">🏠 Home</a></li>
             <li class="<?= $view == 'overview' ? 'active' : '' ?>"><a href="dashboard.php?view=overview">Dashboard</a></li>
+<<<<<<< HEAD
             <li class="<?= $view == 'cards' ? 'active' : '' ?>"><a href="dashboard.php?view=cards">My Cards</a></li>
+=======
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
             <li class="<?= $view == 'transfer' ? 'active' : '' ?>"><a href="dashboard.php?view=transfer">Transfer Funds</a></li>
             <li class="<?= $view == 'history' ? 'active' : '' ?>"><a href="dashboard.php?view=history">Transaction History</a></li>
             <li class="<?= $view == 'settings' ? 'active' : '' ?>"><a href="dashboard.php?view=settings">Settings</a></li>
@@ -327,7 +386,11 @@ if ($account) {
 
         <?php if (!$account): ?>
             <div class="notice">
+<<<<<<< HEAD
                 <strong>No bank account assigned yet.</strong> Your funds transfer and card services will be available once the bank admin assigns an account to you.
+=======
+                <strong>No bank account assigned yet.</strong> Your funds transfer and transaction history will be available once the bank admin assigns an account to you.
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
             </div>
         <?php endif; ?>
 
@@ -394,6 +457,7 @@ if ($account) {
 
         <?php
         // ==========================================
+<<<<<<< HEAD
         // VIEW: MY CARDS (NEW)
         // ==========================================
         elseif ($view == 'cards'): ?>
@@ -461,6 +525,8 @@ if ($account) {
 
         <?php
         // ==========================================
+=======
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
         // VIEW: TRANSFER FUNDS
         // ==========================================
         elseif ($view == 'transfer'): ?>
@@ -558,7 +624,11 @@ if ($account) {
                         </div>
                         <div class="form-group">
                             <label>Contact Number</label>
+<<<<<<< HEAD
                             <input type="tel" name="profile_phone" required pattern="[0-9]{11}" title="Enter exactly 11 digits" value="<?php echo htmlspecialchars($profile['Phone']); ?>">
+=======
+                            <input type="tel" name="profile_phone" required pattern="[0-9]{11}" title="Enter exactly 11 digits (e.g. 01712345678)" value="<?php echo htmlspecialchars($profile['Phone']); ?>">
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
                         </div>
                         <div class="form-group">
                             <label>Address</label>

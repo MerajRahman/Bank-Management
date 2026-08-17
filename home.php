@@ -189,8 +189,13 @@
         <p class="section-sub">Our experienced professionals are here to help you reach your financial goals with confidence.</p>
         <div class="team-grid">
             <div class="team-card">
+<<<<<<< HEAD
                 <img src="images/manager.jpg" alt="Managing Director">
                 <h3>Meraj Islam</h3>
+=======
+                <img src="images/staff-1.jpg" alt="Managing Director">
+                <h3>Arif Rahman</h3>
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
                 <p class="role">Managing Director</p>
                 <p class="desc">Leading our vision of secure, customer-first banking.</p>
             </div>
@@ -239,4 +244,8 @@
     </footer>
 
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> a9ac621674ab526db2529f1835712d9e04e38ef1
