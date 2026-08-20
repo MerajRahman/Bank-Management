@@ -32,4 +32,8 @@ To run Bank Ashkona on your local machine:
 1. Install **XAMPP** and start the **Apache** and **MySQL** modules[cite: 2].
 2. Clone the repository into your web root directory (`C:\xampp\htdocs\`):
    ```bash
+
+👨‍💻 Development TeamThis project was developed collaboratively by:
+🌟 Meraj Islam - Team Leader  
+⭐ Waleed Bin Baki - Core Developer  
    git clone [https://github.com/MerajRahman/Bank-Management.git](https://github.com/MerajRahman/Bank-Management.git)
