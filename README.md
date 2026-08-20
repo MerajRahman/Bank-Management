@@ -36,4 +36,3 @@ To run Bank Ashkona on your local machine:
 👨‍💻 Development TeamThis project was developed collaboratively by:
 🌟 Meraj Islam - Team Leader  
 ⭐ Waleed Bin Baki - Core Developer  
-   git clone [https://github.com/MerajRahman/Bank-Management.git](https://github.com/MerajRahman/Bank-Management.git)
