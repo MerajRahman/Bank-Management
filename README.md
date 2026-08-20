@@ -30,8 +30,8 @@ A comprehensive, secure, and fully responsive web-based banking application desi
 To run Bank Ashkona on your local machine:
 
 1. Install **XAMPP** and start the **Apache** and **MySQL** modules[cite: 2].
-2. Clone the repository into your web root directory (`C:\xampp\htdocs\`):
-   ```bash
+2. Use Visual Studio
+3. setup & connect the project with local server
 
 👨‍💻 Development TeamThis project was developed collaboratively by:
 🌟 Meraj Islam - Team Leader  
